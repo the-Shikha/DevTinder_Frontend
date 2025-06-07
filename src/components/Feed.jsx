@@ -1,22 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import UserCard from './UserCard'
+import axios from 'axios'
+import { BASE_URL } from '../utils/constants'
+import { useDispatch, useSelector } from 'react-redux'
+import { addFeed } from '../utils/feedSlice'
 
 const Feed = () => {
-  return (
-    <div className="card bg-base-100 w-96 shadow-sm ">
-  <figure className="px-10 pt-10">
-    <img
-      src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-      alt="Shoes"
-      className="rounded-xl" />
-  </figure>
-  <div className="card-body items-center text-center">
-    <h2 className="card-title">Card Title</h2>
-    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-    <div className="card-actions">
-      <button className="btn btn-primary">Buy Now</button>
-    </div>
-  </div>
-</div>
+    const feedData=useSelector((store)=>store.feed)
+    //console.log(feedData)
+    const dispatch=useDispatch()
+    const getFeed=async()=>{
+        if(feedData) return ;
+        try{
+            
+            const res=await axios.get(BASE_URL+"/feed",{withCredentials:true})
+            //console.log(res)
+            dispatch(addFeed(res.data))
+        }
+        catch(err){
+            console.log(err.message)
+        }
+    } 
+    useEffect(()=>{
+        getFeed()
+    },[])
+  if(!feedData) return;
+  if(feedData.length<=0) return <h1 className='text-2xl justify-center flex my-4 font-semibold'>No new feed found !!</h1>
+  return  (
+    feedData && (<div className='flex justify-center my-15'>
+        <UserCard user={feedData[0]}/>
+    </div>)
   )
 }
 

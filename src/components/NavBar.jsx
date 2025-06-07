@@ -1,12 +1,10 @@
 import axios from "axios";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
 
 const NavBar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
   const user=useSelector(store=>store.user)
   const navigate=useNavigate()
   const dispatch=useDispatch()
@@ -29,7 +27,9 @@ const NavBar = () => {
     <div className="navbar bg-base-300 shadow-sm px-4">
       {/* Left: Logo */}
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost normal-case text-xl">DevTinder</Link>
+      {user?<Link to="/" className="btn btn-ghost normal-case text-xl">DevTinder</Link>:<a className="btn btn-ghost normal-case text-xl">DevTinder</a>}
+       
+       
       </div>
 
       
@@ -57,45 +57,15 @@ const NavBar = () => {
             <li>
               <Link to="/profile" className="justify-between">
                 Profile
-                <span className="badge">New</span>
+                <span className="badge">Edit</span>
               </Link>
             </li>
-            <li><a>Settings</a></li>
+            <li><Link to="/connections">Connections</Link></li>
+            <li><Link to="/requests">Requests</Link></li>
             <li><a onClick={handleLogout}>Logout</a></li>
           </ul>
         </div>
       </div>)}
-
-      <div className=" flex items-center">
-        <button
-          className="btn btn-ghost btn-circle"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            {menuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
-      </div>
 
       
     </div>

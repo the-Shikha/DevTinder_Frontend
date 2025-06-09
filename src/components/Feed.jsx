@@ -4,6 +4,7 @@ import axios from 'axios'
 import { BASE_URL } from '../utils/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { addFeed } from '../utils/feedSlice'
+import Shimmer from './Shimmer'
 
 const Feed = () => {
     const feedData=useSelector((store)=>store.feed)
@@ -24,7 +25,7 @@ const Feed = () => {
     useEffect(()=>{
         getFeed()
     },[])
-  if(!feedData) return;
+  if(!feedData) return <Shimmer/>;
   if(feedData.length<=0) return <h1 className='text-2xl justify-center flex my-4 font-semibold'>No new feed found !!</h1>
   return  (
     feedData && (<div className='flex justify-center my-15'>

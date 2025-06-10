@@ -13,8 +13,8 @@ const EditProfile = ({ user }) => {
   const [about, setAbout] = useState(user.about)
   const [photoUrl, setPhotoUrl] = useState(user.photoUrl)
   const [loading, setLoading] = useState(false)
-  const [error,setError]=useState("")
-  const [showToast,setShowTest]=useState(false)
+  const [error, setError] = useState("")
+  const [showToast, setShowTest] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -29,11 +29,11 @@ const EditProfile = ({ user }) => {
       )
       dispatch(addUser(res?.data?.data))
       setShowTest(true)
-      setTimeout(()=>{
+      setTimeout(() => {
         setShowTest(false)
-      },3000)
+      }, 3000)
     } catch (err) {
-      setError(err.response.data)
+      setError(err.response?.data || "Something went wrong")
       console.log(err.message)
     } finally {
       setLoading(false)
@@ -42,16 +42,16 @@ const EditProfile = ({ user }) => {
 
   return (
     <>
-      <div className="flex justify-center mb-52">
-      <div className="flex items-center justify-center mx-10 bg-base-100 px-4 sm:px-6 md:px-8 lg:px-10 py-12">
-        <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-md xl:max-w-sm mx-auto">
-          <div className="card bg-base-300 shadow-2xl p-6 sm:p-8 md:p-10">
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-10 px-4 py-10 lg:px-20 mb-20">
+        {/* Form */}
+        <div className="w-full max-w-md">
+          <div className="card bg-base-300 shadow-2xl p-6 sm:p-8">
             <div className="card-body">
               <h2 className="text-2xl font-semibold text-center mb-6">Edit Profile</h2>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <label className="label">FirstName</label>
+                  <label className="label">First Name</label>
                   <input
                     value={firstName}
                     onChange={e => setFirstName(e.target.value)}
@@ -60,7 +60,7 @@ const EditProfile = ({ user }) => {
                 </div>
 
                 <div>
-                  <label className="label">LastName</label>
+                  <label className="label">Last Name</label>
                   <input
                     value={lastName}
                     onChange={e => setLastName(e.target.value)}
@@ -93,7 +93,7 @@ const EditProfile = ({ user }) => {
                 </div>
 
                 <div>
-                  <label className="label">Photo Url</label>
+                  <label className="label">Photo URL</label>
                   <input
                     value={photoUrl}
                     onChange={e => setPhotoUrl(e.target.value)}
@@ -110,9 +110,11 @@ const EditProfile = ({ user }) => {
                   />
                 </div>
 
-                <div className='text-red-600'>
-                  {error}
-                </div>
+                {error && (
+                  <div className="text-red-600 text-sm">
+                    {error}
+                  </div>
+                )}
 
                 <div>
                   <button
@@ -127,19 +129,24 @@ const EditProfile = ({ user }) => {
             </div>
           </div>
         </div>
+
+        {/* UserCard */}
+        <div className="w-full max-w-md">
+          <UserCard user={{ firstName, lastName, age, gender, about, photoUrl }} />
+        </div>
       </div>
 
-      <div>
-        <UserCard  user={{ firstName, lastName, age, gender, about, photoUrl }} />
-      </div>
-    </div>
-    {showToast && (<div className="toast toast-top toast-center">
-      <div className="alert alert-info">
-        <span>Profile saved successfully</span>
-      </div>
-    </div>)}
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="toast toast-top toast-center z-50">
+          <div className="alert alert-info">
+            <span>Profile saved successfully</span>
+          </div>
+        </div>
+      )}
     </>
   )
 }
 
 export default EditProfile
+
